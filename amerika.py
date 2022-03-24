@@ -45,7 +45,7 @@ st.image(image, width = 200)
 st.markdown('Les mer på [DHLAB-siden](https://nbviewer.jupyter.org/github/DH-LAB-NB/DHLAB/blob/master/DHLAB_ved_Nasjonalbiblioteket.ipynb)')
 
 
-st.title('Søk i amerika-aviser')
+st.title('Søk i norsk-amerikanske aviser')
 
 corpus = make_corpus()
 search = st.text_input('Søkeuttrykk', "")
