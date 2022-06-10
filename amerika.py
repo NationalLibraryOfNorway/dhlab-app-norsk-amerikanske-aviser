@@ -26,8 +26,8 @@ def ngram(NGRAM, word = None, ddk = None, subject = None, period = None, lang = 
 @st.cache(suppress_st_warning=True, show_spinner = False)
 def make_corpus():
     urns = pd.read_csv('norske_aviser.csv', index_col = 0)
-    corpus = dh.CorpusFromIdentifiers(list(urns.urn.values))
-    return corpus
+    #corpus = dh.CorpusFromIdentifiers(list(urns.urn.values))
+    return urns #corpus
 
 @st.cache(suppress_st_warning=True, show_spinner = False)
 def konk(corpus = None, query = None): 
@@ -42,15 +42,41 @@ def show_konks(conc, query):
 
 image = Image.open('NB-logo-no-eng-svart.png')
 st.image(image, width = 200)
-st.markdown('Les mer på [DHLAB-siden](https://nbviewer.jupyter.org/github/DH-LAB-NB/DHLAB/blob/master/DHLAB_ved_Nasjonalbiblioteket.ipynb)')
+st.markdown('Les om [Digital Humaniora - DH](https://nb.no/dh-lab) ved Nasjonalbiblioteket')
 
 
 st.title('Søk i norsk-amerikanske aviser')
 
 corpus = make_corpus()
 search = st.text_input('Søkeuttrykk', "")
-#st.write(search)
-#st.write(corpus.corpus.head(5))
-#konks = konk(corpus = corpus, query = search)
-konks = api.concordance(urns=list(corpus.corpus.urn.values), words=search, limit = 100)
-st.markdown('\n\n'.join([' '.join([str(y) for y in x]) for x in show_konks(konks, search).itertuples()]))
+samplesize = int(st.number_input("Maks antall konkordanser:", min_value=5, value=100, help="Minste verdi er 5, default er 100"))
+
+if not search == "":
+    konks = api.concordance(urns=list(corpus.urn.values), words=search, limit = 5000)
+    
+    if (samplesize < len(konks)):
+        konkordanser = '\n\n'.join(
+        [' '.join([str(y) for y in x]) for x in 
+         show_konks(konks.sample(min(int(samplesize), len(konks))), search).itertuples()])
+       
+        if st.button(f"Klikk her for flere konkordanser. Sampler {samplesize} av {len(konks)}"):
+            konkordanser = '\n\n'.join(
+        [' '.join([str(y) for y in x]) for x in 
+         show_konks(konks.sample(min(int(samplesize), len(konks))), search).itertuples()])
+       
+            
+    else:
+        if len(konks) == 0:
+            st.write(f"Ingen treff")
+            konkordanser = "-- ingen --"
+        else:
+            st.write(f"Viser alle {len(konks)} konkordansene ")
+            konkordanser = '\n\n'.join(
+        [' '.join([str(y) for y in x]) for x in 
+         show_konks(konks.sample(min(int(samplesize), len(konks))), search).itertuples()]
+            )
+    
+    st.markdown(konkordanser)
+                             
+                
+                
