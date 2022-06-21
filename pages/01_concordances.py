@@ -36,9 +36,10 @@ def konk(corpus = None, query = None):
 
 def show_konks(conc, query):
     conc['link'] = conc['urn'].apply(lambda c: f"[{c.split('_')[2]}](https://www.nb.no/items/{c})")
-    conc['date'] = conc['urn'].apply(lambda c: f"{c.split('_')[2][:4]}")
+    conc['date'] = conc['urn'].apply(lambda c: f"{c.split('_')[5][:4]}")
     conc['conc'] = conc['conc'].apply(lambda c: c.replace('<b>', '**').replace('</b>','**'))
     return conc[['link','date','conc']].sort_values(by = 'date')
+
 
 image = Image.open('NB-logo-no-eng-svart.png')
 st.image(image, width = 200)
@@ -48,7 +49,7 @@ st.markdown('Les om [Digital Humaniora - DH](https://nb.no/dh-lab) ved Nasjonalb
 st.title('Søk i norsk-amerikanske aviser')
 
 corpus = make_corpus()
-search = st.text_input('Søkeuttrykk', "")
+search = st.text_input('Søkeuttrykk', "", help="Bruk trunkerte uttrykk som nordm*")
 samplesize = int(st.number_input("Maks antall konkordanser:", min_value=5, value=100, help="Minste verdi er 5, default er 100"))
 
 if not search == "":
