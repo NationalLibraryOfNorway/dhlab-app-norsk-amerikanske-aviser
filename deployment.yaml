@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: norsk-amerikanske-aviser-deployment
+  labels:
+    app: norsk-amerikanske-aviser
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: norsk-amerikanske-aviser
+  template:
+    metadata:
+      labels:
+        app: norsk-amerikanske-aviser
+    spec:
+      containers:
+      - name: norsk-amerikanske-aviser
+        image: gcr.io/norwegian-language-bank/norsk-amerikanske-aviser:3ca59d01-c426-4ae1-b8f6-205927f42109
+        command: [ "/bin/bash" ]
+        args: [ "-c", "streamlit run main_amerika.py --server.port 8501 --server.baseUrlPath /norsk-amerikanske-aviser --browser.gatherUsageStats=False"]
+        ports:
+        - containerPort: 8501
+        resources:
+          limits:
+            cpu: 1
+            ephemeral-storage: 256Mi
+            memory: 1Gi
+          requests:
+            cpu: 1
+            ephemeral-storage: 256Mi
+            memory: 1Gi
