@@ -5,7 +5,7 @@ import pandas as pd
 from PIL import Image
 import urllib
 
-@st.cache(suppress_st_warning=True, show_spinner = False)
+@st.cache_data()
 def sumword(NGRAM, words = None, ddk = None, topic = None, period = None, lang = None, title = None):
     wordlist =   [x.strip() for x in words.split(',')]
     # check if trailing comma, or comma in succession, if so count comma in
@@ -16,20 +16,20 @@ def sumword(NGRAM, words = None, ddk = None, topic = None, period = None, lang =
     return ref
 
 
-@st.cache(suppress_st_warning=True, show_spinner = False)
+@st.cache_data()
 def ngram(NGRAM, word = None, ddk = None, subject = None, period = None, lang = None, title = None):
     res = NGRAM(word, ddk = ddk, topic = subject, period = period, lang = lang, title = title)
     res = res.rolling(window = smooth_slider).mean()
     res.index = pd.to_datetime(res.index, format='%Y')
     return res
 
-@st.cache(suppress_st_warning=True, show_spinner = False)
+@st.cache_data()
 def make_corpus():
     urns = pd.read_csv('norske_aviser.csv', index_col = 0)
     #corpus = dh.CorpusFromIdentifiers(list(urns.urn.values))
     return urns #corpus
 
-@st.cache(suppress_st_warning=True, show_spinner = False)
+@st.cache_data()
 def konk(corpus = None, query = None): 
     conc = dh.Concordance(corpus, query, limit = 10000)
     return conc

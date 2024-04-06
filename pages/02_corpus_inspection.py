@@ -13,13 +13,13 @@ from PIL import Image
 import urllib
 
 
-@st.cache(suppress_st_warning=True, show_spinner = False)
+@st.cache_data()
 def make_corpus():
     urns = pd.read_csv('norske_aviser.csv', index_col = 0)
     #corpus = dh.CorpusFromIdentifiers(list(urns.urn.values))
     return urns #corpus
 
-@st.cache(suppress_st_warning=True, show_spinner = False)
+@st.cache_data()
 def aggregate(corpus):
     yearcounts = corpus.groupby(["title", "year"]).count()[['urn']]
     yearcounts = yearcounts.reset_index(level = 1)

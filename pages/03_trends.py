@@ -6,11 +6,12 @@ from PIL import Image
 import urllib
 
 
-@st.cache(suppress_st_warning=True, show_spinner = False)
+@st.cache_data()
 def make_crps():
     urns = pd.read_csv('norske_aviser.csv', index_col = 0)
-    return dh.CorpusFromIdentifiers(list(urns.urn.values))
-
+    corp = dh.Corpus()
+    corp.extend_from_identifiers(urns)
+    return corp
 
 image = Image.open('NB-logo-no-eng-svart.png')
 st.image(image, width = 200)
