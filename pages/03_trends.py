@@ -6,7 +6,8 @@ from PIL import Image
 
 @st.cache_data()
 def make_crps():
-    urns = pd.read_csv('norske_aviser.csv', index_col = 0)
+    df = pd.read_csv('norske_aviser.csv', index_col = 0)
+    urns = df['urn'].tolist()
     corp = dh.Corpus()
     corp.extend_from_identifiers(urns)
     return corp
@@ -23,8 +24,9 @@ search = st.text_input('Finn trender for ord, enkeltord skilt med komma', "", he
 searchlist = [x.strip() for x in search.split(',')]
 
 if not search == "":
+    # NB: /urn_frequencies and /frequencies return dhlabids, not urns
     trends = dh.Counts(corpus = corpus, words=searchlist)
-    df = pd.merge(trends.counts.transpose(), corpus.corpus.set_index('urn')[["year"]], left_index=True, right_index=True)
+    df = pd.merge(trends.counts.transpose(), corpus.corpus.set_index('dhlabid')[["year"]], left_index=True, right_index=True)
     df["year"] = pd.to_datetime(df.year, format="%Y")
     st.bar_chart(df.groupby('year').sum())
                              
