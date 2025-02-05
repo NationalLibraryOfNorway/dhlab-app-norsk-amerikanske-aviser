@@ -3,7 +3,6 @@ import dhlab.text as dh
 import dhlab.api.dhlab_api as api
 import pandas as pd
 from PIL import Image
-import urllib
 
 @st.cache_data()
 def sumword(NGRAM, words = None, ddk = None, topic = None, period = None, lang = None, title = None):

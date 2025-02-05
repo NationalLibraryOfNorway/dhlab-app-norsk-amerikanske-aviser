@@ -1,6 +1,5 @@
 import streamlit as st
 from PIL import Image
-import urllib
 
 image = Image.open('NB-logo-no-eng-svart.png')
 st.image(image, width = 200)

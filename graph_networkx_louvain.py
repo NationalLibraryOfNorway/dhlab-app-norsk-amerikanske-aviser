@@ -1,8 +1,6 @@
-import pandas as pd
 import numpy as np
 import requests
 import json
-import community
 from community import community_louvain
 import networkx as nx
 from networkx.algorithms.community import k_clique_communities
@@ -10,23 +8,16 @@ import seaborn as sns
 
 from collections import Counter
 from nbtext import urn_coll, urn_coll_words, frame, get_freq
+import matplotlib.pyplot as plt
 from matplotlib import colors as mcolors
 
 
 colors = dict(mcolors.BASE_COLORS, **mcolors.CSS4_COLORS)
 
-from IPython.display import HTML
-import sqlite3
-
 
 from pylab import rcParams
 
 rcParams['figure.figsize'] = 15, 10
-
-
-
-
-import matplotlib.pyplot as plt
 
 
 cutdown = lambda x: x.subgraph([n[0] for n in x.degree() if n[1]>1])
@@ -66,9 +57,6 @@ def make_graph(word):
 
 def draw_graph(G, nodelist=[], h=15, v=10, fontsize=12, layout=nx.spring_layout,
                arrows=False, node_color='orange', node_size=100, font_color='black'): 
-    from pylab import rcParams
-    import matplotlib.pyplot as plt
-    
     if nodelist != []:
         G = G.subgraph(nodelist)
     x, y = rcParams['figure.figsize']
@@ -85,9 +73,6 @@ def draw_graph(G, nodelist=[], h=15, v=10, fontsize=12, layout=nx.spring_layout,
 
 
 def draw_graph_centrality(G,  h=15, v=10, deltax=0, deltay=0, fontsize=18, k=0.2, arrows=False, node_alpha=0.3, l_alpha=1, node_color='blue', centrality=nx.degree_centrality, font_color='black', threshold=0.01, multi=3000): 
-    from pylab import rcParams
-    import matplotlib.pyplot as plt
-    
     node_dict = centrality(G)
     subnodes = dict({x:node_dict[x] for x in node_dict if node_dict[x] >= threshold})
     x, y = rcParams['figure.figsize']
@@ -120,11 +105,6 @@ def draw_graph_centrality2(G, Subsets=[],  h=15, v=10, deltax=0, deltay=0, fonts
                           colstart=0.2,
                           coldark=0.5):
     
-    from pylab import rcParams
-    import matplotlib.pyplot as plt
-    from matplotlib import colors as mcolors
-
-
     colors = dict(mcolors.BASE_COLORS, **mcolors.CSS4_COLORS)
     node_dict = centrality(G)
     subnodes = dict({x:node_dict[x] for x in node_dict if node_dict[x] >= threshold})
@@ -296,8 +276,6 @@ def tree_positions(Tree, spacing, increment=1):
 
 def tree_pos(x, G, level, spacing, num, left_edge, level_increment = 1):
     """Draw from left to right for left_edge"""
-    import numpy as np
-    
     positions = dict()
     daughters = [y for (y,z) in G.edges() if x==z]
     if daughters == []:
@@ -347,8 +325,6 @@ def draw_tree(G, node_size=1, node_color='slategrey', n=2, m = 1, h=10, v=10):
     #plt.savefig('krig.svg')
 
 def draw_forest(F, spacing, h=15, v=10, save_name=False):
-    import matplotlib.pyplot as plt
-    
     #rows = len(F)
     #row = 1
     #plt.figsize=(15,10)

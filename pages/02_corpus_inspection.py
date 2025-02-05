@@ -1,16 +1,8 @@
 # -*- coding: utf-8 -*-
 import streamlit as st
-import dhlab.text as dh
-import dhlab.api.dhlab_api as api
 import pandas as pd
-from PIL import Image
-import urllib
 import streamlit as st
-import dhlab.text as dh
-import dhlab.api.dhlab_api as api
 import pandas as pd
-from PIL import Image
-import urllib
 
 
 @st.cache_data()

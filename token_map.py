@@ -1,6 +1,9 @@
 import pandas as pd
 import os
-from nbtext import make_network_name_graph, token_map, urn_concordance, pure_urn, metadata
+import sys
+from nbtext import make_network_name_graph, token_map, pure_urn, metadata, names
+from collections import Counter
+
 import requests
 
 
@@ -144,9 +147,6 @@ def character_network(urn, token_map, names = None):
         names = token_map_names(token_map)
     return make_network_name_graph(urn, names, tokenmap = token_map)
 
-from nbtext import names
-from collections import Counter
-
 def count_name_strings(urn, token_map, names=None):
     """ return a count of the names in tokenmap"""
     if names == None:
@@ -183,7 +183,6 @@ def combine_names(namedict):
     return total_names
 
 def filter_names(tm_names, gazetteers):
-    from collections import Counter
     """Filter name findings using a gazetteer - the gazetteer should consist of a list of first and last names"""
     
     # check single names

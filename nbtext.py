@@ -1,5 +1,6 @@
 import json
 import os
+import sys
 import random
 from random import sample
 import numpy as np
@@ -15,6 +16,10 @@ from IPython.display import HTML
 import seaborn as sns
 import networkx as nx
 from pylab import rcParams
+import zipfile
+import re
+from bs4 import BeautifulSoup
+
 try:
     from wordcloud import WordCloud
 except ImportError:
@@ -319,7 +324,6 @@ def difference(first, second, rf, rs, years=(1980, 2000),smooth=1, corpus='bok')
 
 def df_combine(array_df):
     """Combine one columns dataframes"""
-    import pandas as pd
     cols = []
     for i in range(len(a)):
         #print(i)
@@ -579,7 +583,6 @@ def collocation(
 
 def collocation_data(words, yearfrom = 2000, yearto = 2005, limit = 1000, before = 5, after = 5, title = '%', corpus='bok'):
     """Collocation for a set of words sum up all the collocations words is a list of words or a blank separated string of words"""
-    import sys
     a = dict()
     
     if isinstance(words, str):
@@ -607,8 +610,6 @@ def collocation_data(words, yearfrom = 2000, yearto = 2005, limit = 1000, before
     return pd.DataFrame(result.sum(axis=1)).sort_values(by=0, ascending=False)
 
 class CollocationCorpus:
-    from random import sample
-    
     def __init__(self, corpus = None, name='', maximum_texts = 500):
         urns = pure_urn(corpus)
         
@@ -1571,11 +1572,6 @@ def frame_sort(frame, by = 0, ascending = False):
 
 def get_urns_from_docx(document):
     """Find all URNs specified in a Word document - typically .docx"""
-    import sys
-    import zipfile
-    import re
-    from bs4 import BeautifulSoup
-
     with zipfile.ZipFile(document, 'r') as zfp:
         with zfp.open('word/document.xml') as fp:
             soup = BeautifulSoup(fp.read(), 'xml')
@@ -1584,9 +1580,6 @@ def get_urns_from_docx(document):
 
 def get_urns_from_text(document):
     """Find all URNs in a text-file"""
-    
-    import re
-
     with open(document) as fp:
         text = fp.read()
     #print(text)
@@ -1595,7 +1588,6 @@ def get_urns_from_text(document):
 
 def get_urns_from_files(mappe, file_type='txt'):
     """Find URNs in files in a folder - specify folder"""
-    import os
     froot, _, files = next(os.walk(mappe))
     urns = dict()
     for f in files:
@@ -1611,8 +1603,6 @@ def get_urns_from_files(mappe, file_type='txt'):
 #======================== Utilities
 
 def xmlpretty(xmls):
-    from bs4 import BeautifulSoup
-
     soup = BeautifulSoup(xmls, features='lxml')
     soup.prettify()
     # '<html>\n <head>\n </head>\n <body>\n  <a href="http://example.com/">\n...'
@@ -1651,7 +1641,6 @@ def metadata_xml(URN, kind='marcxml'):
 
 
 def save_frame_to_excel(df, filename, index = False):
-    import os
     if os.path.exists(filename):
         print('Det eksisterer allerede en fil {filename} - velg nytt navn og prøv igjen'.format(filename=filename))
     else:
@@ -1659,7 +1648,6 @@ def save_frame_to_excel(df, filename, index = False):
     return
 
 def restore_metadata_from_excel(data):
-    import os
     df = pd.DataFrame()
     try:
         df = pd.read_excel(data)
