@@ -25,8 +25,7 @@ def ngram(NGRAM, word = None, ddk = None, subject = None, period = None, lang = 
 @st.cache_data()
 def make_corpus():
     urns = pd.read_csv('norske_aviser.csv', index_col = 0)
-    #corpus = dh.CorpusFromIdentifiers(list(urns.urn.values))
-    return urns #corpus
+    return urns
 
 @st.cache_data()
 def konk(corpus = None, query = None): 

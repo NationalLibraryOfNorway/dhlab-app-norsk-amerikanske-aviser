@@ -26,8 +26,6 @@ if not search == "":
     trends = dh.Counts(corpus = corpus, words=searchlist)
     df = pd.merge(trends.counts.transpose(), corpus.corpus.set_index('urn')[["year"]], left_index=True, right_index=True)
     df["year"] = pd.to_datetime(df.year, format="%Y")
-    #st.dataframe(trends.counts.transpose())
-    #st.dataframe(df)
     st.bar_chart(df.groupby('year').sum())
                              
                 

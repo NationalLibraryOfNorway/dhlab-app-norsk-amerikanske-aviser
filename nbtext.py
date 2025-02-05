@@ -41,7 +41,6 @@ def def2dict(ddef):
     for d in defs:
         lex = d.split(':')
         if len(lex) == 2:
-            #print('#'.join(lex))
             hyper = lex[0].strip()
             occurrences = [x.strip() for x in lex[1].split(',')]
             res[hyper] = occurrences
@@ -220,7 +219,6 @@ def urn_from_text(T):
 
 def metadata(urn=None):
     urns = pure_urn(urn)
-    #print(urns)
     r = requests.post("https://api.nb.no/ngram/meta", json={'urn':urns})
     return r.json()
 
@@ -326,7 +324,6 @@ def df_combine(array_df):
     """Combine one columns dataframes"""
     cols = []
     for i in range(len(a)):
-        #print(i)
         if array_df[i].columns[0] in cols:
             array_df[i].columns = [array_df[i].columns[0] + '_' + str(i)]
         cols.append(array_df[i].columns[0])
@@ -396,7 +393,6 @@ def refine_book_urn(urns = None, words = None, author = None,
     """Refine URNs for books with metadata"""
     
     # if empty urns nothing to refine
-    
     if urns is None or urns == []:
         return []
     
@@ -409,7 +405,6 @@ def refine_book_urn(urns = None, words = None, author = None,
     query = {i:values[i] for i in args if values[i] != None and i != 'period' and i != 'urns'}
     query['year'] = period[0]
     query['next'] = period[1] - period[0]
-    #print(query)
     return refine_urn(urns, query)
 
 def best_book_urn(word = None, author = None, 
@@ -468,7 +463,6 @@ def get_papers(top=5, cutoff=5, navn='%', yearfrom=1800, yearto=2020, samplesize
     
     
     # split samplesize into chunks, go through the chunks and then the remainder
-    
     (first, second) = div(samplesize, chunks)
     r = []
     
@@ -536,7 +530,6 @@ def get_aggregated_corpus(urns, top=0, cutoff=0):
     if isinstance(urns[0], list):  # urns assumed to be list of list with urn-serial as first element
         urns = [u[0] for u in urns]
     for u in urns:
-        #print(u)
         res += get_freq(u, top = top, cutoff = cutoff)
     return pd.DataFrame.from_dict(res, orient='index').sort_values(by=0, ascending = False)
 
@@ -656,7 +649,6 @@ def get_corpus_text(urns, top = 0, cutoff=0):
         # assume it is a single urn, text or number
         urns = [urns]
     for u in urns:
-        #print(u)
         k[u] = get_freq(u, top = top, cutoff = cutoff)
     df = pd.DataFrame(k)
     res = df.sort_values(by=df.columns[0], ascending=False)
@@ -666,7 +658,6 @@ def get_corpus_text(urns, top = 0, cutoff=0):
 def normalize_corpus_dataframe(df):
     colsums = df.sum()
     for x in colsums.index:
-        #print(x)
         df[x] = df[x].fillna(0)/colsums[x]
     return True
 
@@ -768,7 +759,6 @@ class Cluster:
         with open(filename, 'r') as infile:
             try:
                 model = json.loads(infile.read())
-                #print(model['word'])
                 self.word = model['word']
                 self.period = model['period']
                 self.corpus = model['corpus']
@@ -846,7 +836,6 @@ def make_network_name_graph(urn, tokens, tokenmap=None, cutoff=2):
         tokens = [list(x.keys()) for x in tokens]
         
     r = requests.post("https://api.nb.no/ngram/word_graph", json={'urn':urn, 'tokens':tokens, 'tokenmap':tokenmap})
-    #print(r.text)
     G = nx.Graph()
     G.add_weighted_edges_from([(x,y,z) for (x,y,z) in r.json() if z > cutoff and x != y])
     return G
@@ -878,7 +867,6 @@ def token_map_to_tuples(tokens_as_strings, sep='_', arrow='==>'):
         token = x.split(arrow)[0].strip()
         mapsto = x.split(arrow)[1].strip()
         tuples.append((tuple(token.split(sep)), tuple(mapsto.split(sep))))
-    #tuples = [(tuple(x.split(arrow).strip()[0].split(sep)), tuple(x.split(arrow)[1].strip().split(sep))) for x in tokens_as_strings]
     return tuples
         
 def token_map(tokens, strings=False, sep='_', arrow= '==>'):
@@ -890,7 +878,6 @@ def token_map(tokens, strings=False, sep='_', arrow= '==>'):
     # convert tokens to tuples and put them all in one list
     tokens = [(x,) for x in tokens[0]] + tokens[1] + tokens[2] + tokens[3]
     tm = []
-    #print(tokens)
     for token in tokens:
         if isinstance(token, str):
             trep = (token,)
@@ -900,20 +887,16 @@ def token_map(tokens, strings=False, sep='_', arrow= '==>'):
         else:
             trep = token
         n = len(trep)
-        #print(trep)
 
         if trep[-1].endswith('s'):
             cp = list(trep[:n-1])
             cp.append(trep[-1][:-1])
             cp = tuple(cp)
 
-            #print('copy', cp, trep)
             if cp in tokens:
-                #print(trep, cp)
                 trep = cp
 
         larger = [ts for ts in tokens if set(ts) >= set(trep)]
-        #print(trep, ' => ', larger)
         larger.sort(key=lambda x: len(x), reverse=True)
         tm.append((token,larger[0]))
         res = tm
@@ -992,7 +975,6 @@ def make_cloud(json_text, top=100, background='white', stretch=lambda x: 2**(10*
     font_path=font_path,  
     background_color=background,
     width=width, 
-    #color_func=my_colorfunc,
     ranks_only=True,
     height=height).generate_from_frequencies(pairs)
     return wc
@@ -1055,10 +1037,8 @@ class Corpus:
             else:
                 målkorpus_def = get_urn(params)
 
-            #print("Antall bøker i målkorpus ", len(målkorpus_def))
             if isinstance(målkorpus_def[0], list):
                 målkorpus_urn = [str(x[0]) for x in målkorpus_def]
-                #print(målkorpus_urn)
             else:
                 målkorpus_urn = målkorpus_def
             if len(målkorpus_urn) > max_books and max_books > 0:
@@ -1073,13 +1053,11 @@ class Corpus:
                 referansekorpus_def = get_urn({'year':period[0], 'next':period[1]-period[0], 'limit':reference})
 
 
-            #print("Antall bøker i referanse: ", len(referansekorpus_def))
             # referansen skal være distinkt fra målkorpuset
             referanse_urn = [str(x[0]) for x in referansekorpus_def]
             self.reference_urn = referanse_urn
             self.target_urn = target_urn
             # make sure there is no overlap between target and reference
-            # 
             referanse_urn = list(set(referanse_urn) - set(target_urn))
 
 
@@ -1154,11 +1132,8 @@ class Corpus:
         with open(filename, 'r') as infile:
             try:
                 model = json.loads(infile.read())
-                #print(model['word'])
                 self.params = model['params']
-                #print(self.params)
                 self.målkorpus_tot = pd.read_json(model['target'])
-                #print(self.målkorpus_tot[:10])
                 self.combo_tot = pd.read_json(model['combo'])
                 self.mål_docf = pd.read_json(model['target_df'])
                 self.combo_docf = pd.read_json(model['combo_df'])
@@ -1375,12 +1350,10 @@ def make_graph(words, lang='nob', cutoff=20, leaves=0):
     edgelist = []
     if result.status_code == 200:
         graph = json.loads(result.text)
-        #print(graph)
         nodes = graph['nodes']
         edges = graph['links']
         for edge in edges:
             edgelist += [(nodes[edge['source']]['name'], nodes[edge['target']]['name'], abs(edge['value']))]
-    #print(edgelist)
     G.add_weighted_edges_from(edgelist)
 
     return G
@@ -1451,7 +1424,6 @@ def get_konk(word, params=None, kind='html'):
                     w=x['word'],
                     a=x['after'])
         else:
-            #print(r.json())
             for x in r.json():
                 rows += row_template.format(
                     kw = word,
@@ -1475,7 +1447,6 @@ def get_konk(word, params=None, kind='html'):
             
         except:
             res= pd.DataFrame()
-        #r = r.style.set_properties(subset=['after'],**{'text-align':'left'})
     return res
 
 
@@ -1536,7 +1507,6 @@ def get_urnkonk(word, params=None, html=True):
     else:
         res = pd.DataFrame(r.json())
         res = res[['urn','before','word','after']]
-        #r = r.style.set_properties(subset=['after'],**{'text-align':'left'})
     return res
 
 def frame(something, name = None):
@@ -1582,7 +1552,6 @@ def get_urns_from_text(document):
     """Find all URNs in a text-file"""
     with open(document) as fp:
         text = fp.read()
-    #print(text)
     return re.findall("[0-9]{13}", text)
 
 
@@ -1592,7 +1561,6 @@ def get_urns_from_files(mappe, file_type='txt'):
     urns = dict()
     for f in files:
         fn = (os.path.join(froot, f))
-        #print(fn)
         if f.endswith('.docx'):
             urns[f] = get_urns_from_docx(fn)
         elif f.endswith('.txt'):

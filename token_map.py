@@ -12,8 +12,6 @@ import ast
 
 def names_from_corpus(korpus):
     """Find names in a larger corpus korpus is a frame with a column urn, or a list of urns """
-    
-    #urner = list(korpus['urn'])
     urner = pure_urn(korpus)
     alle_navn = combine_names(corpus_names(urner))
     return alle_navn
@@ -82,9 +80,7 @@ def names_to_token_map_file(wp, filename='', orient='column'):
     # if all ok go ahead
     
     table_names = dict()
-    #print(wp)
     tmap = token_map(wp)
-    ##print(tmap)
     for (name, target) in tmap:
         x_str = ' '.join(target)
         y_str = ' '.join(name)
@@ -155,12 +151,7 @@ def count_name_strings(urn, token_map, names=None):
     if isinstance(urn, list):
         urn = urn[0]
         
-    # tokens should be a list of list of tokens. If it is list of dicts pull out the keys (= tokens)   
-    #if isinstance(tokens[0], dict):
-    #    tokens = [list(x.keys()) for x in tokens]
-        
     res = requests.post("https://api.nb.no/ngram/word_counts", json={'urn':urn, 'tokens':names, 'tokenmap':token_map})
-    #print(r.text)
    
     return pd.read_json(res.json()).sort_values(by=0, ascending = False)
 
@@ -198,10 +189,7 @@ def filter_names(tm_names, gazetteers):
         size = len(name_struct)
         if 0 < size <= 4:
             size -= 1
-            #print(size, name_struct)
-            #print(struct)
             if size == 0:
-                #print(name_struct[0])
                 name_struct = name_struct[0]
             if name_struct in struct[size]:
                 struct[size][name_struct] += val
@@ -231,7 +219,6 @@ def filter_names(tm_names, gazetteers):
             if member(token, gazetteers):
                 new_token.append(token)
         new_token = tuple(new_token)
-        #print(new_token)
         val = 0
         if new_token != ():
             name_structure = add_name(new_token, name_structure, doubles[w])
@@ -247,11 +234,9 @@ def filter_names(tm_names, gazetteers):
     for w in triples:
         new_token = []
         for token in w:
-            #print(token)
             if member(token, gazetteers):
                 new_token.append(token)
         new_token = tuple(new_token)
-        #print(new_token)
         val = 0
         if new_token != ():
             name_structure = add_name(new_token, name_structure, triples[w])
@@ -267,11 +252,9 @@ def filter_names(tm_names, gazetteers):
     for w in quads:
         new_token = []
         for token in w:
-            #print(token)
             if member(token, gazetteers):
                 new_token.append(token)
         new_token = tuple(new_token)
-        #print(new_token)
         val = 0
         if new_token != ():
             name_structure = add_name(new_token, name_structure, quads[w])
