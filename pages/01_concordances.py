@@ -3,10 +3,11 @@ import dhlab.api.dhlab_api as api
 import pandas as pd
 from PIL import Image
 
+import utils
 
 @st.cache_data()
 def make_corpus():
-    urns = pd.read_csv('norske_aviser.csv', index_col = 0)
+    urns = utils.load_csv('norske_aviser.csv', index_col = 0)
     return urns
 
 def show_konks(conc, query):

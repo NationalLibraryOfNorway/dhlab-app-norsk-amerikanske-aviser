@@ -3,10 +3,12 @@ import dhlab.text as dh
 import pandas as pd
 from PIL import Image
 
+import utils
+
 
 @st.cache_data()
 def make_corpus():
-    df = pd.read_csv('norske_aviser.csv', index_col = 0)
+    df = utils.load_csv('norske_aviser.csv', index_col = 0)
     urns = df['urn'].tolist()
     corp = dh.Corpus()
     corp.extend_from_identifiers(urns)

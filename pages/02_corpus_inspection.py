@@ -4,10 +4,12 @@ import pandas as pd
 import streamlit as st
 import pandas as pd
 
+import utils
+
 
 @st.cache_data()
 def make_corpus():
-    urns = pd.read_csv('norske_aviser.csv', index_col = 0)
+    urns = utils.load_csv('norske_aviser.csv', index_col = 0)
     return urns
 
 @st.cache_data()
