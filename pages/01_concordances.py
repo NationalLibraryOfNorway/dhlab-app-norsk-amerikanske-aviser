@@ -5,10 +5,6 @@ from PIL import Image
 
 import utils
 
-@st.cache_data()
-def make_corpus():
-    urns = utils.load_csv('norske_aviser.csv', index_col = 0)
-    return urns
 
 def show_konks(conc, query):
     conc['link'] = conc['urn'].apply(lambda c: f"[{c.split('_')[2]}](https://www.nb.no/items/{c})")
@@ -24,7 +20,7 @@ st.markdown('Les om [Digital Humaniora - DH](https://nb.no/dh-lab) ved Nasjonalb
 
 st.title('Søk i norsk-amerikanske aviser')
 
-corpus = make_corpus()
+corpus = utils.load_norske_aviser()
 search = st.text_input('Søkeuttrykk', "", help="Bruk trunkerte uttrykk som nordm*")
 samplesize = int(st.number_input("Maks antall konkordanser:", min_value=5, value=100, help="Minste verdi er 5, default er 100"))
 

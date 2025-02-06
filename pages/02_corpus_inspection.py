@@ -8,11 +8,6 @@ import utils
 
 
 @st.cache_data()
-def make_corpus():
-    urns = utils.load_csv('norske_aviser.csv', index_col = 0)
-    return urns
-
-@st.cache_data()
 def aggregate(corpus):
     yearcounts = corpus.groupby(["title", "year"]).count()[['urn']]
     yearcounts = yearcounts.reset_index(level = 1)
@@ -22,7 +17,7 @@ def aggregate(corpus):
 
 st.title('Oversikt over korpuset')
 
-corpus = make_corpus()
+corpus = utils.load_norske_aviser()
 
 counts = corpus.groupby("title").count().sort_values(by='year', ascending = False)[["urn"]]
 counts.columns = ['counts']

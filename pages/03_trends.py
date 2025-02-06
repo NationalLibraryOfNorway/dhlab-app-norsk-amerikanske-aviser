@@ -6,14 +6,6 @@ from PIL import Image
 import utils
 
 
-@st.cache_data()
-def make_corpus():
-    df = utils.load_csv('norske_aviser.csv', index_col = 0)
-    urns = df['urn'].tolist()
-    corp = dh.Corpus()
-    corp.extend_from_identifiers(urns)
-    return corp
-
 image = Image.open('NB-logo-no-eng-svart.png')
 st.image(image, width = 200)
 st.markdown('Les om [Digital Humaniora - DH](https://nb.no/dh-lab) ved Nasjonalbiblioteket')
@@ -21,7 +13,9 @@ st.markdown('Les om [Digital Humaniora - DH](https://nb.no/dh-lab) ved Nasjonalb
 
 st.title('Fordeling av ord over år i norsk-amerikanske aviser')
 
-corpus = make_corpus()
+aviser = utils.load_norske_aviser()
+corpus = utils.make_corpus(aviser)
+
 search = st.text_input('Finn trender for ord, enkeltord skilt med komma', "", help="Kommaseparert liste med ord, ingen trunkering")
 searchlist = [x.strip() for x in search.split(',')]
 
