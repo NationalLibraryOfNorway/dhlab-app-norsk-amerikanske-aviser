@@ -1,36 +1,13 @@
 import streamlit as st
-import dhlab.text as dh
 import dhlab.api.dhlab_api as api
 import pandas as pd
 from PIL import Image
 
-@st.cache_data()
-def sumword(NGRAM, words = None, ddk = None, topic = None, period = None, lang = None, title = None):
-    wordlist =   [x.strip() for x in words.split(',')]
-    # check if trailing comma, or comma in succession, if so count comma in
-    if '' in wordlist:
-        wordlist = [','] + [y for y in wordlist if y != '']
-    ref = NGRAM(wordlist, ddk = ddk, topic = topic, period = period, lang = lang, title = title).sum(axis = 1)
-    ref.columns = 'tot'
-    return ref
-
-
-@st.cache_data()
-def ngram(NGRAM, word = None, ddk = None, subject = None, period = None, lang = None, title = None):
-    res = NGRAM(word, ddk = ddk, topic = subject, period = period, lang = lang, title = title)
-    res = res.rolling(window = smooth_slider).mean()
-    res.index = pd.to_datetime(res.index, format='%Y')
-    return res
 
 @st.cache_data()
 def make_corpus():
     urns = pd.read_csv('norske_aviser.csv', index_col = 0)
     return urns
-
-@st.cache_data()
-def konk(corpus = None, query = None): 
-    conc = dh.Concordance(corpus, query, limit = 10000)
-    return conc
 
 def show_konks(conc, query):
     conc['link'] = conc['urn'].apply(lambda c: f"[{c.split('_')[2]}](https://www.nb.no/items/{c})")
