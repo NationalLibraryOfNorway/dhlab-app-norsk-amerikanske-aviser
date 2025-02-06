@@ -44,4 +44,4 @@ st.markdown("### Fordeling av utgaver over år for en avis")
 yearcounts = aggregate(corpus)
 
 choose = st.selectbox("Velg en avis - skriv eller klikk", set(yearcounts[yearcounts.antall > 1].index))
-st.bar_chart(yearcounts.loc[choose].set_index('år'))
+st.bar_chart(yearcounts.loc[[choose]].set_index('år'))
