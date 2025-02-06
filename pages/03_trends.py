@@ -5,7 +5,7 @@ from PIL import Image
 
 
 @st.cache_data()
-def make_crps():
+def make_corpus():
     df = pd.read_csv('norske_aviser.csv', index_col = 0)
     urns = df['urn'].tolist()
     corp = dh.Corpus()
@@ -19,7 +19,7 @@ st.markdown('Les om [Digital Humaniora - DH](https://nb.no/dh-lab) ved Nasjonalb
 
 st.title('Fordeling av ord over år i norsk-amerikanske aviser')
 
-corpus = make_crps()
+corpus = make_corpus()
 search = st.text_input('Finn trender for ord, enkeltord skilt med komma', "", help="Kommaseparert liste med ord, ingen trunkering")
 searchlist = [x.strip() for x in search.split(',')]
 
