@@ -16,5 +16,8 @@ FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim
         COPY ./NB-logo-no-eng-svart.png ./main_amerika.py ./norske_aviser.csv ./
         COPY ./pages ./pages
 
-        CMD streamlit run main_amerika.py --server.port ${PORT} --server.baseUrlPath /norsk-amerikanske-aviser
+        CMD streamlit run main_amerika.py                   \
+            --server.port ${PORT}                           \
+            --server.baseUrlPath /norsk-amerikanske-aviser  \
+            --browser.gatherUsageStats false
 
