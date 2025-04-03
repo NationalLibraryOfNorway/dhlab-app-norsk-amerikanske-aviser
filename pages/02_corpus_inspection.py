@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 import streamlit as st
-import pandas as pd
-import streamlit as st
-import pandas as pd
 
 
 @st.cache_data()
 def make_corpus():
+    import pandas as pd
     urns = pd.read_csv('norske_aviser.csv', index_col = 0)
     return urns
 
@@ -20,11 +18,18 @@ def aggregate(corpus):
 
 st.title('Oversikt over korpuset')
 
-corpus = make_corpus()
+st.markdown("### Korpuset vist med antall utgaver samt første og siste utgivelsesår\nklikk på kolonnens tittel for å endre sortering")
 
+import pandas as pd
+rows = []
+st.dataframe(pd.DataFrame(rows, columns = ['Tittel', 'Antall', 'Fra', 'Til']))
+
+st.markdown("### Fordeling av utgaver over år for en avis")
+
+corpus = make_corpus()
 counts = corpus.groupby("title").count().sort_values(by='year', ascending = False)[["urn"]]
 counts.columns = ['counts']
-rows = []
+
 for title in counts.index:
     rows.append(
         [
@@ -35,11 +40,6 @@ for title in counts.index:
         ]
     )
 
-st.markdown("### Korpuset vist med antall utgaver samt første og siste utgivelsesår\nklikk på kolonnens tittel for å endre sortering")
-st.dataframe(pd.DataFrame(rows, columns = ['Tittel', 'Antall', 'Fra', 'Til']))
-
-
-st.markdown("### Fordeling av utgaver over år for en avis")
 
 yearcounts = aggregate(corpus)
 
