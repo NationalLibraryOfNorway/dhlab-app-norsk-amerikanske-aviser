@@ -1,11 +1,10 @@
 import streamlit as st
-import dhlab.api.dhlab_api as api
-import pandas as pd
 from PIL import Image
 
 
 @st.cache_data()
 def make_corpus():
+    import pandas as pd
     urns = pd.read_csv('norske_aviser.csv', index_col = 0)
     return urns
 
@@ -23,11 +22,13 @@ st.markdown('Les om [Digital Humaniora - DH](https://nb.no/dh-lab) ved Nasjonalb
 
 st.title('Søk i norsk-amerikanske aviser')
 
-corpus = make_corpus()
 search = st.text_input('Søkeuttrykk', "", help="Bruk trunkerte uttrykk som nordm*")
 samplesize = int(st.number_input("Maks antall konkordanser:", min_value=5, value=100, help="Minste verdi er 5, default er 100"))
 
+corpus = make_corpus()
+
 if not search == "":
+    import dhlab.api.dhlab_api as api
     konks = api.concordance(urns=list(corpus.urn.values), words=search, limit = 5000)
     
     if (samplesize < len(konks)):
